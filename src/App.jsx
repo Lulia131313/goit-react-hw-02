@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Feedback from "./components/feedback/feedback";
 import Notification from "./components/notification/notification";
 import Options from "./components/options/options";
@@ -6,7 +6,7 @@ import Options from "./components/options/options";
 const App = () => {
   const [feedback, setFeedback] = useState({ good: 0, neutral: 0, bad: 0 });
 
-  const updateFeedback = (feedbackType) => {
+  const handleFeedback = (feedbackType) => {
     setFeedback((prev) => ({
       ...prev,
       [feedbackType]: prev[feedbackType] + 1,
@@ -22,6 +22,17 @@ const App = () => {
   const positivePercentage = Math.round((good / totalFeedback) * 100);
   console.log(positivePercentage);
 
+  // useEffect(() => {
+  //   const storedFeedback = JSON.parse(localStorage.getItem("feedback"));
+  //   if (storedFeedback) {
+  //     setFeedback(storedFeedback);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    localStorage.setItem("feedback", JSON.stringify(feedback));
+  }, [feedback]);
+
   return (
     <>
       <h1>Sip Happens Café</h1>
@@ -30,7 +41,7 @@ const App = () => {
         options below.
       </p>
       <Options
-        updateFeedback={updateFeedback}
+        handleFeedback={handleFeedback}
         totalFeedback={totalFeedback}
         resetFeedback={resetFeedback}
       />
